@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use time::PrimitiveDateTime;
+use url::Url;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Chat {
@@ -10,7 +11,7 @@ pub struct Chat {
     pub last_message_at: PrimitiveDateTime,
     pub broadcast_only: bool,
     pub files_allowed: bool,
-    pub url: String,
+    pub url: Url,
     pub is_admin: bool,
     pub can_write: bool,
     pub unread_messages: i32,
@@ -45,10 +46,10 @@ pub struct FileAttachment {
     pub size: i32,
     pub related_to: String,
     pub uploaded: PrimitiveDateTime,
-    pub url: String,
-    pub url_by_hash: String,
-    pub preview_url: String,
-    pub download_url: String,
+    pub url: Url,
+    pub url_by_hash: Url,
+    pub preview_url: Url,
+    pub download_url: Url,
     pub can_delete: bool,
     pub human_size: String,
     #[serde(rename = "type")]
