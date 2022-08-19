@@ -3,39 +3,68 @@ use std::collections::HashMap;
 use time::PrimitiveDateTime;
 use url::Url;
 
-#[derive(Serialize, Deserialize, Clone)]
+use super::users::UserPresence;
+
+/*#[derive(Serialize, Deserialize, Clone)]
 pub struct Chat {
     pub id: i32,
     pub name: String,
     pub created_at: PrimitiveDateTime,
     pub last_message_at: PrimitiveDateTime,
+    pub is_direct: bool,
     pub broadcast_only: bool,
     pub files_allowed: bool,
+    pub everybody_can_start_call: bool,
+    pub call_open_until: Option<>, //TODO: Find type
     pub url: Url,
-    pub is_admin: bool,
-    pub can_write: bool,
+    pub call_is_open: bool,
     pub unread_messages: i32,
+    pub is_muted: bool,
+    pub is_pinned: bool,
+    pub is_admin: bool, //TODO: Option?
+    pub last_message: ChatMessage,
+    //pub can_write: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-pub struct Message {
+pub struct ChatMessage {
     pub id: i32,
     pub chat_id: i32,
-    pub user: MessageAuthor,
+    pub user_id: i32,
     pub text: String,
     pub has_files: bool,
-    //pub meta_type: null,
+    pub has_poll: bool,
+    pub meta_type: Option<>, //TODO: Find type
     pub sent_at: PrimitiveDateTime,
+    pub files: Vec<>, //TODO: Find type
     pub is_own: bool,
-    //pub reactions: []
+    pub can_delete: bool,
+    pub reactions: Vec<>, //TODO: Find type
+    pub alphanumeric_id: String,
+    pub user: ChatUser,
+    pub text_formatted: String,
+    pub text_basic: String,
+    pub poll: Option<>, //TODO: Find type
 }
 
 #[derive(Serialize, Deserialize, Clone)]
-pub struct MessageAuthor {
+pub struct ChatUser {
     pub id: i32,
     pub name: String,
+    pub badges: HashMap<String, String>,
+    pub presence: UserPresence,
+    pub profile_token: String,
+    pub avatar_url: Url,
 }
 
+/// Untested (likely more values)
+pub struct ChatCreateInfo {
+    pub name: String,
+    pub broadcast_only: bool,
+    pub files_allowed: bool,
+}
+
+/// Untested
 #[derive(Serialize, Deserialize, Clone)]
 pub struct FileAttachment {
     pub id: i32,
@@ -53,22 +82,24 @@ pub struct FileAttachment {
     pub can_delete: bool,
     pub human_size: String,
     #[serde(rename = "type")]
-    pub type_: String,
+    pub file_type: String,
     pub alphanumeric_id: String,
 }
 
+/// Untested
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PollAttachment {
     pub id: i32,
     pub is_anonymous: bool,
     pub is_multiple_choice: bool,
-    //pub closes_at: null,
+    pub closes_at: Option<>, //TODO: Find type
     pub alphanumeric_id: String,
     pub options: Vec<PollAttachmentOption>,
     pub total_votes: i32,
     pub users_voted: Vec<PollAttachmentVote>,
 }
 
+/// Untested
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PollAttachmentOption {
     pub id: i32,
@@ -78,9 +109,11 @@ pub struct PollAttachmentOption {
     pub is_voted: bool,
 }
 
+/// Untested
 #[derive(Serialize, Deserialize, Clone)]
 pub struct PollAttachmentVote {
     pub id: i32,
     pub name: String,
     pub badges: HashMap<String, String>,
 }
+*/
