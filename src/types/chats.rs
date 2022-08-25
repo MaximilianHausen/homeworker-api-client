@@ -1,9 +1,12 @@
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use time::PrimitiveDateTime;
+
+use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
-use super::users::UserPresence;
+use super::users::Presence;
+
+//TODO: Redo chats from API responses
 
 /*#[derive(Serialize, Deserialize, Clone)]
 pub struct Chat {
@@ -15,13 +18,13 @@ pub struct Chat {
     pub broadcast_only: bool,
     pub files_allowed: bool,
     pub everybody_can_start_call: bool,
-    pub call_open_until: Option<>, //TODO: Find type
+    pub call_open_until: Option<>,
     pub url: Url,
     pub call_is_open: bool,
     pub unread_messages: i32,
     pub is_muted: bool,
     pub is_pinned: bool,
-    pub is_admin: bool, //TODO: Option?
+    pub is_admin: bool,
     pub last_message: ChatMessage,
     //pub can_write: bool,
 }
@@ -34,17 +37,17 @@ pub struct ChatMessage {
     pub text: String,
     pub has_files: bool,
     pub has_poll: bool,
-    pub meta_type: Option<>, //TODO: Find type
+    pub meta_type: Option<>,
     pub sent_at: PrimitiveDateTime,
-    pub files: Vec<>, //TODO: Find type
+    pub files: Vec<>,
     pub is_own: bool,
     pub can_delete: bool,
-    pub reactions: Vec<>, //TODO: Find type
+    pub reactions: Vec<>,
     pub alphanumeric_id: String,
     pub user: ChatUser,
     pub text_formatted: String,
     pub text_basic: String,
-    pub poll: Option<>, //TODO: Find type
+    pub poll: Option<>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -92,7 +95,7 @@ pub struct PollAttachment {
     pub id: i32,
     pub is_anonymous: bool,
     pub is_multiple_choice: bool,
-    pub closes_at: Option<>, //TODO: Find type
+    pub closes_at: Option<>,
     pub alphanumeric_id: String,
     pub options: Vec<PollAttachmentOption>,
     pub total_votes: i32,
@@ -115,5 +118,4 @@ pub struct PollAttachmentVote {
     pub id: i32,
     pub name: String,
     pub badges: HashMap<String, String>,
-}
-*/
+}*/

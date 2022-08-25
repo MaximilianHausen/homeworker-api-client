@@ -1,9 +1,11 @@
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
-use time::PrimitiveDateTime;
 
 use super::lessons;
 
-#[derive(Serialize, Deserialize, Clone)]
+//TODO: Redo Todos from API responses
+
+/*#[derive(Serialize, Deserialize, Clone)]
 pub struct Todo {
     id: i32,
     //course_id: null,
@@ -12,12 +14,12 @@ pub struct Todo {
     note: String,
     points: i32,
     time: i32,
-    until_datetime: PrimitiveDateTime,
+    until_datetime: NaiveDateTime,
     //import_source: null,
     //import_key: null,
-    created_at: PrimitiveDateTime,
-    posted_on: PrimitiveDateTime,
-    to_be_done_until: PrimitiveDateTime,
+    created_at: NaiveDateTime,
+    posted_on: NaiveDateTime,
+    to_be_done_until: NaiveDateTime,
     lesson: lessons::Lesson,
     note_formatted: String,
     note_basic: String,
@@ -30,4 +32,4 @@ pub struct Todo {
     is_admin: bool,
     can_delete: bool,
     //documents: []
-}
+}*/

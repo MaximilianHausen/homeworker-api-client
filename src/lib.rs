@@ -1,8 +1,9 @@
 use crate::api::me::notifications::id::NotificationDeleteReturn;
 use crate::api::me::UserEditArgs;
-use crate::models::users::{Membership, Notification, StudentInfo};
+use crate::types::Ips;
+use crate::types::users::{Membership, Notification, StudentInfo};
 
-pub mod models;
+pub mod types;
 
 pub const BASE_URL: &str = "https://homeworker.li/api/v2";
 
@@ -19,32 +20,32 @@ impl HomeworkerClient {
         }
     }
 
-    pub fn get_me(&self, callback: fn(ehttp::Result<models::users::User>)) {
+    pub fn get_me(&self, callback: fn(ehttp::Result<types::users::User>)) {
         api::me::get(&self.access_token, callback);
     }
-    pub fn edit_me(&self, callback: fn(ehttp::Result<models::users::User>), (name, mail, mobile, birthday): (String, String, String, String)) {
+    pub fn edit_me(&self, callback: fn(ehttp::Result<types::users::User>), (name, mail, mobile, birthday): (String, String, String, String)) {
         api::me::post(&self.access_token, callback, &UserEditArgs { name, mail, mobile, birthday });
     }
 
-    pub fn get_access_token(&self, callback: fn(ehttp::Result<models::users::AccessTokenInfo>)) {
+    pub fn get_access_token(&self, callback: fn(ehttp::Result<types::users::AccessTokenInfo>)) {
         api::me::access_token::get(&self.access_token, callback);
     }
 
-    pub fn get_presence(&self, callback: fn(ehttp::Result<models::users::Presence>)) {
+    pub fn get_presence(&self, callback: fn(ehttp::Result<types::users::Presence>)) {
         api::me::presence::get(&self.access_token, callback);
     }
-    pub fn set_presence(&self, callback: fn(ehttp::Result<models::users::Presence>), new_presence: &models::users::Presence) {
+    pub fn set_presence(&self, callback: fn(ehttp::Result<types::users::Presence>), new_presence: &types::users::Presence) {
         api::me::presence::post(&self.access_token, callback, new_presence);
     }
 
-    pub fn get_navigation(&self, callback: fn(ehttp::Result<models::users::Navigation>)) {
+    pub fn get_navigation(&self, callback: fn(ehttp::Result<types::users::Navigation>)) {
         api::me::navigation::get(&self.access_token, callback);
     }
 
-    pub fn get_setting(&self, callback: fn(ehttp::Result<models::users::Setting>), setting_name: &str, default_value: &str) {
+    pub fn get_setting(&self, callback: fn(ehttp::Result<types::users::Setting>), setting_name: &str, default_value: &str) {
         api::me::settings::get(&self.access_token, callback, setting_name, default_value);
     }
-    pub fn set_setting(&self, callback: fn(ehttp::Result<models::users::Setting>), new_setting: &models::users::Setting) {
+    pub fn set_setting(&self, callback: fn(ehttp::Result<types::users::Setting>), new_setting: &types::users::Setting) {
         api::me::settings::post(&self.access_token, callback, new_setting);
     }
 
@@ -70,6 +71,10 @@ impl HomeworkerClient {
 
     pub fn get_student(&self, callback: fn(ehttp::Result<StudentInfo>)) {
         api::me::student::get(&self.access_token, callback);
+    }
+
+    pub fn get_ips(&self, callback: fn(ehttp::Result<Ips>)) {
+        api::ips::get(callback);
     }
 }
 
@@ -130,7 +135,7 @@ pub mod api {
     pub mod me {
         use crate::{
             api::{fetch, get_request, post_request},
-            models::users::User,
+            types::users::User,
         };
 
         pub fn get(token: &str, callback: fn(ehttp::Result<User>)) {
@@ -153,7 +158,7 @@ pub mod api {
         pub mod access_token {
             use crate::{
                 api::{fetch, get_request},
-                models::users::AccessTokenInfo,
+                types::users::AccessTokenInfo,
             };
 
             pub fn get(token: &str, callback: fn(ehttp::Result<AccessTokenInfo>)) {
@@ -164,7 +169,7 @@ pub mod api {
         pub mod presence {
             use crate::{
                 api::{fetch, get_request, post_request},
-                models::users::Presence,
+                types::users::Presence,
             };
 
             pub fn get(token: &str, callback: fn(ehttp::Result<Presence>)) {
@@ -179,7 +184,7 @@ pub mod api {
         pub mod navigation {
             use crate::{
                 api::{fetch, get_request},
-                models::users::Navigation,
+                types::users::Navigation,
             };
 
             pub fn get(token: &str, callback: fn(ehttp::Result<Navigation>)) {
@@ -190,7 +195,7 @@ pub mod api {
         pub mod settings {
             use crate::{
                 api::{fetch, get_request, post_request},
-                models::users::Setting,
+                types::users::Setting,
             };
 
             //TODO: default_value option
@@ -206,7 +211,7 @@ pub mod api {
         pub mod notifications {
             use crate::{
                 api::{fetch, get_request},
-                models::users::Notification,
+                types::users::Notification,
             };
 
             pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Notification>>)) {
@@ -216,7 +221,7 @@ pub mod api {
             pub mod unseen {
                 use crate::{
                     api::{fetch, get_request},
-                    models::users::Notification,
+                    types::users::Notification,
                 };
 
                 pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Notification>>)) {
@@ -227,7 +232,7 @@ pub mod api {
             pub mod id {
                 use crate::{
                     api::{delete_request, fetch, get_request},
-                    models::users::Notification,
+                    types::users::Notification,
                 };
 
                 pub fn get(token: &str, callback: fn(ehttp::Result<Notification>), notification_id: u32) {
@@ -259,7 +264,7 @@ pub mod api {
             pub mod memberships {
                 use crate::{
                     api::{fetch, get_request},
-                    models::users::Membership,
+                    types::users::Membership,
                 };
 
                 pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Membership>>)) {
@@ -271,12 +276,46 @@ pub mod api {
         pub mod student {
             use crate::{
                 api::{fetch, get_request},
-                models::users::StudentInfo,
+                types::users::StudentInfo,
             };
 
             pub fn get(token: &str, callback: fn(ehttp::Result<StudentInfo>)) {
                 fetch(get_request("/me/student", token), callback);
             }
+        }
+    }
+
+    pub mod schools {
+        use crate::{
+            api::{fetch, get_request},
+            types::schools::School,
+        };
+
+        pub fn get(token: &str, callback: fn(ehttp::Result<Vec<School>>)) {
+            fetch(get_request("/schools", token), callback);
+        }
+
+        pub mod id {
+            use crate::{
+                api::{fetch, get_request},
+                types::schools::School,
+            };
+
+            pub fn get(token: &str, callback: fn(ehttp::Result<School>), school_id: u32) {
+                fetch(get_request(&format!("/schools/{}", school_id), token), callback);
+            }
+        }
+    }
+
+    pub mod ips {
+        use crate::{
+            api::fetch,
+            BASE_URL,
+            types::Ips,
+        };
+
+        pub fn get(callback: fn(ehttp::Result<Ips>)) {
+            fetch(ehttp::Request::get(BASE_URL.to_owned() + "/ips"), callback);
         }
     }
 }

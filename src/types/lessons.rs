@@ -1,10 +1,12 @@
 use std::collections::HashMap;
 
+use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use serde::{Deserialize, Serialize};
-use time::{Date, PrimitiveDateTime, Time};
 use url::Url;
 
-#[derive(Serialize, Deserialize, Clone)]
+//TODO: Redo courses/lessons from API responses
+
+/*#[derive(Serialize, Deserialize, Clone)]
 pub struct Course {
     id: i32,
     name: String,
@@ -36,7 +38,7 @@ pub struct FileEntry {
     name: String,
     is_dir: bool,
     parent_id: String,
-    created_at: PrimitiveDateTime,
+    created_at: NaiveDateTime,
     document: Option<File>,
     can_write: bool,
 }
@@ -50,7 +52,7 @@ pub struct File {
     content_type: String,
     size: i32,
     related_to: String,
-    uploaded: PrimitiveDateTime,
+    uploaded: NaiveDateTime,
     url: Url,
     preview_url: Url,
     download_url: Url,
@@ -66,7 +68,7 @@ pub struct Homework {
     text: String,
     note: String,
     time: i32,
-    until_datetime: PrimitiveDateTime,
+    until_datetime: NaiveDateTime,
     //related_members: [],
     is_private: bool,
     is_restricted: bool,
@@ -78,7 +80,7 @@ pub struct Homework {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Timetable {
-    date: Date,
+    date: NaiveDate,
     is_today: bool,
     is_unschooled: bool,
     lessons: Vec<TimetableLesson>,
@@ -100,4 +102,4 @@ pub struct TimetableTime {
     //position: null,
     text: String,
     text_readable: String,
-}
+}*/
