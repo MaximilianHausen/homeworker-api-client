@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 pub mod chats;
 pub mod lessons;
-pub mod oauth;
 pub mod schools;
 pub mod todos;
 pub mod users;
