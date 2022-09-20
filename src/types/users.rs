@@ -90,7 +90,7 @@ pub struct Notification {
     //TODO: Check type of document_relation in Notification (probably String)
     pub link: url::Url,
     pub tag: Option<String>,
-    //TODO: Find type of document_relation in Notification (placeholder String)
+    //TODO: Find type of tag in Notification (placeholder String)
     pub created_at: NaiveDateTime,
     pub seen_at: Option<NaiveDateTime>,
     pub title_formatted: String,

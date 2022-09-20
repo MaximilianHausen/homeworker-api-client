@@ -1,72 +1,81 @@
+use reqwest::{Client, RequestBuilder};
+use serde::de::DeserializeOwned;
+use serde::Serialize;
+use crate::types::Ips;
+use crate::types::schools::*;
+use crate::types::users::*;
+
 pub mod types;
 
 pub const BASE_URL: &str = "https://homeworker.li/api/v2";
 
-pub mod api {
-    use ehttp::Request;
-    use serde::de::DeserializeOwned;
-    use serde::Serialize;
+type Result<T> = std::result::Result<T, Error>;
 
-    use crate::BASE_URL;
+pub enum Error {
+    RequestError(reqwest::Error),
+    ApiError(types::Error),
+}
 
-    fn fetch<T: DeserializeOwned + 'static>(request: Request, callback: fn(ehttp::Result<T>)) {
-        ehttp::fetch(
-            request,
-            move |result: ehttp::Result<ehttp::Response>| {
-                match result {
-                    Ok(response) => {
-                        let y = &response.bytes;
-                        callback(Ok(serde_json::from_slice::<T>(y).unwrap()))
-                    }
-                    Err(error) => callback(Err(error)),
-                }
-            },
-        );
+impl From<reqwest::Error> for Error {
+    fn from(error: reqwest::Error) -> Self {
+        Self::RequestError(error)
     }
+}
 
-    fn get_request(endpoint: &str, token: &str) -> Request {
-        let mut request = Request::get(BASE_URL.to_owned() + endpoint);
-        request
-            .headers
-            .insert("Authorization".to_owned(), "Bearer ".to_owned() + token);
-        request
+impl From<types::Error> for Error {
+    fn from(error: types::Error) -> Self {
+        Self::ApiError(error)
     }
+}
 
-    fn delete_request(endpoint: &str, token: &str) -> Request {
-        let mut request = Request {
-            method: "DELETE".to_owned(),
-            url: BASE_URL.to_owned() + endpoint,
-            body: vec![],
-            headers: ehttp::headers(&[("Accept", "*/*")]),
-        };
-        request
-            .headers
-            .insert("Authorization".to_owned(), "Bearer ".to_owned() + token);
-        request
-    }
+pub struct HomeworkerClient {
+    client: Client,
+    pub access_token: String,
+}
 
-    fn post_request(endpoint: &str, token: &str, body: &impl Serialize) -> Request {
-        let mut request = Request::post(
-            BASE_URL.to_owned() + endpoint,
-            serde_json::to_vec(body).unwrap(),
-        );
-        request
-            .headers
-            .insert("Authorization".to_owned(), "Bearer ".to_owned() + token);
-        request
-    }
-
-    pub mod me {
-        use crate::{
-            api::{fetch, get_request, post_request},
-            types::users::User,
-        };
-
-        pub fn get(token: &str, callback: fn(ehttp::Result<User>)) {
-            fetch(get_request("/me", token), callback);
+impl HomeworkerClient {
+    pub fn new(access_token: String) -> Self {
+        Self {
+            client: Client::new(),
+            access_token,
         }
+    }
 
-        #[derive(serde::Serialize, serde::Deserialize, Clone)]
+    // ========== GENERAL FETCH ==========
+
+    async fn get<T: DeserializeOwned>(&self, endpoint: &str) -> Result<T> {
+        self.fetch(self.client.get(BASE_URL.to_owned() + endpoint)).await
+    }
+    async fn post<T: Serialize, Q: DeserializeOwned>(&self, endpoint: &str, body: &T) -> Result<Q> {
+        self.fetch(self.client.post(BASE_URL.to_owned() + endpoint).json(&body)).await
+    }
+    async fn delete<T: DeserializeOwned>(&self, endpoint: &str) -> Result<T> {
+        self.fetch(self.client.delete(BASE_URL.to_owned() + endpoint)).await
+    }
+
+
+    async fn fetch<T: DeserializeOwned>(&self, request: RequestBuilder) -> Result<T> {
+        let response = request
+            .header("Authorization", format!("Bearer {}", self.access_token))
+            .send()
+            .await?;
+
+        if response.status().is_success() {
+            Ok(response.json::<T>().await?)
+        } else {
+            Err(response.json::<types::Error>().await?.into())
+        }
+    }
+
+    // ========== API ROUTES ==========
+
+    // ---------- /me ----------
+
+    pub async fn get_me(&self) -> Result<User> {
+        self.get("/me").await
+    }
+    pub async fn edit_me(&self, name: String, mail: String, mobile: String, birthday: String) -> Result<User> {
+        #[derive(serde::Serialize)]
         pub struct UserEditArgs {
             //TODO: Check for optional in /me POST
             pub name: String,
@@ -74,172 +83,74 @@ pub mod api {
             pub mobile: String,
             pub birthday: String,
         }
-
-        pub fn post(token: &str, callback: fn(ehttp::Result<User>), edit_info: &UserEditArgs) {
-            fetch(post_request("/me", token, edit_info), callback);
-        }
-
-        pub mod access_token {
-            use crate::{
-                api::{fetch, get_request},
-                types::users::AccessTokenInfo,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<AccessTokenInfo>)) {
-                fetch(get_request("/me/access_token", token), callback);
-            }
-        }
-
-        pub mod presence {
-            use crate::{
-                api::{fetch, get_request, post_request},
-                types::users::Presence,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<Presence>)) {
-                fetch(get_request("/me/presence", token), callback);
-            }
-
-            pub fn post(token: &str, callback: fn(ehttp::Result<Presence>), new_presence: &Presence) {
-                fetch(post_request("/me/presence", token, new_presence), callback);
-            }
-        }
-
-        pub mod navigation {
-            use crate::{
-                api::{fetch, get_request},
-                types::users::Navigation,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<Navigation>)) {
-                fetch(get_request("/me/navigation", token), callback);
-            }
-        }
-
-        pub mod settings {
-            use crate::{
-                api::{fetch, get_request, post_request},
-                types::users::Setting,
-            };
-
-            //TODO: default_value option
-            pub fn get(token: &str, callback: fn(ehttp::Result<Setting>), setting_name: &str, default_value: &str) {
-                fetch(get_request(&format!("/me/settings?name={}&default={}", setting_name, default_value), token), callback);
-            }
-
-            pub fn post(token: &str, callback: fn(ehttp::Result<Setting>), new_setting: &Setting) {
-                fetch(post_request("/me/settings", token, new_setting), callback);
-            }
-        }
-
-        pub mod notifications {
-            use crate::{
-                api::{fetch, get_request},
-                types::users::Notification,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Notification>>)) {
-                fetch(get_request("/me/notifications", token), callback);
-            }
-
-            pub mod unseen {
-                use crate::{
-                    api::{fetch, get_request},
-                    types::users::Notification,
-                };
-
-                pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Notification>>)) {
-                    fetch(get_request("/me/notifications/unseen", token), callback);
-                }
-            }
-
-            pub mod id {
-                use crate::{
-                    api::{delete_request, fetch, get_request},
-                    types::users::Notification,
-                };
-
-                pub fn get(token: &str, callback: fn(ehttp::Result<Notification>), notification_id: u32) {
-                    fetch(get_request(&format!("/me/notifications/{}", notification_id), token), callback);
-                }
-
-                #[derive(serde::Serialize, serde::Deserialize, Clone)]
-                pub struct NotificationDeleteReturn {
-                    pub success: bool,
-                }
-
-                pub fn delete(token: &str, callback: fn(ehttp::Result<NotificationDeleteReturn>), notification_id: u32) {
-                    fetch(delete_request(&format!("/me/notifications/{}", notification_id), token), callback);
-                }
-
-                pub mod mark_as_seen {
-                    use crate::{
-                        api::{fetch, post_request},
-                    };
-
-                    pub fn post(token: &str, callback: fn(ehttp::Result<()>), notification_id: u32) {
-                        fetch(post_request(&format!("/me/notifications/{}/mark_as_read", notification_id), token, &""), callback);
-                    }
-                }
-            }
-        }
-
-        pub mod courses {
-            pub mod memberships {
-                use crate::{
-                    api::{fetch, get_request},
-                    types::users::Membership,
-                };
-
-                pub fn get(token: &str, callback: fn(ehttp::Result<Vec<Membership>>)) {
-                    fetch(get_request("/me/courses/memberships", token), callback);
-                }
-            }
-        }
-
-        pub mod student {
-            use crate::{
-                api::{fetch, get_request},
-                types::users::StudentInfo,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<StudentInfo>)) {
-                fetch(get_request("/me/student", token), callback);
-            }
-        }
+        self.post("/me", &UserEditArgs { name, mail, mobile, birthday }).await
     }
 
-    pub mod schools {
-        use crate::{
-            api::{fetch, get_request},
-            types::schools::School,
-        };
-
-        pub fn get(token: &str, callback: fn(ehttp::Result<Vec<School>>)) {
-            fetch(get_request("/schools", token), callback);
-        }
-
-        pub mod id {
-            use crate::{
-                api::{fetch, get_request},
-                types::schools::School,
-            };
-
-            pub fn get(token: &str, callback: fn(ehttp::Result<School>), school_id: u32) {
-                fetch(get_request(&format!("/schools/{}", school_id), token), callback);
-            }
-        }
+    pub async fn get_token_info(&self) -> Result<AccessTokenInfo> {
+        self.get("/me/access_token").await
     }
 
-    pub mod ips {
-        use crate::{
-            api::fetch,
-            BASE_URL,
-            types::Ips,
-        };
+    pub async fn get_presence(&self) -> Result<Presence> {
+        self.get("/me/presence").await
+    }
+    pub async fn set_presence(&self, is_online: bool, expires_in: i32) -> Result<Presence> {
+        self.post("/me/presence", &Presence { is_online, expires_in }).await
+    }
 
-        pub fn get(callback: fn(ehttp::Result<Ips>)) {
-            fetch(ehttp::Request::get(BASE_URL.to_owned() + "/ips"), callback);
+    pub async fn get_navigation(&self) -> Result<Navigation> {
+        self.get("/me/navigation").await
+    }
+
+    //TODO: default_value option
+    pub async fn get_setting(&self, setting_name: &str, default_value: &str) -> Result<Setting> {
+        self.get(&format!("/me/settings?name={}&default={}", setting_name, default_value)).await
+    }
+    pub async fn set_setting(&self, name: String, value: String) -> Result<Setting> {
+        self.post("/me/settings", &Setting { name, value: Some(value) }).await
+    }
+
+    pub async fn get_all_notifications(&self) -> Result<Vec<Notification>> {
+        self.get("/me/notifications").await
+    }
+    pub async fn get_unseen_notifications(&self) -> Result<Vec<Notification>> {
+        self.get("/me/notifications/unseen").await
+    }
+    pub async fn get_notification(&self, notification_id: u32) -> Result<Notification> {
+        self.get(&format!("/me/notifications/{}", notification_id)).await
+    }
+    pub async fn delete_notification(&self, notification_id: u32) -> Result<bool> {
+        #[derive(serde::Deserialize)]
+        pub struct NotificationDeleteReturn {
+            pub success: bool,
         }
+        self.delete::<NotificationDeleteReturn>(&format!("/me/notifications/{}", notification_id)).await
+            .map(|x| x.success)
+    }
+    pub async fn mark_notification_as_seen(&self, notification_id: u32) -> Result<()> {
+        self.post(&format!("/me/notifications/{}/mark_as_read", notification_id), &"").await
+    }
+
+    pub async fn get_course_memberships(&self) -> Result<Vec<Membership>> {
+        self.get("/me/courses/memberships").await
+    }
+
+    pub async fn get_student_info(&self) -> Result<StudentInfo> {
+        self.get("/me/student").await
+    }
+
+    // ---------- /schools ----------
+
+    pub async fn get_all_schools(&self) -> Result<Vec<School>> {
+        self.get("/schools").await
+    }
+
+    pub async fn get_school(&self, school_id: u32) -> Result<School> {
+        self.get(&format!("/schools/{}", school_id)).await
+    }
+
+    // ---------- /ips ----------
+
+    pub async fn get_ips(&self) -> Result<Ips> {
+        self.get("/ips").await
     }
 }
