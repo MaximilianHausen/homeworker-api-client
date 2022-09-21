@@ -5,6 +5,7 @@ use serde::{Deserialize, Serialize};
 pub mod chats;
 pub mod lessons;
 pub mod schools;
+pub mod timetables;
 pub mod todos;
 pub mod users;
 

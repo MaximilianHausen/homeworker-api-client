@@ -3,6 +3,7 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 use crate::types::Ips;
 use crate::types::schools::*;
+use crate::types::timetables::TimetableDay;
 use crate::types::users::*;
 
 pub mod types;
@@ -146,6 +147,12 @@ impl HomeworkerClient {
 
     pub async fn get_school(&self, school_id: u32) -> Result<School> {
         self.get(&format!("/schools/{}", school_id)).await
+    }
+
+    // ---------- /courses ----------
+
+    pub async fn get_timetable(&self, course_id: u32) -> Result<Vec<TimetableDay>> {
+        self.get(&format!("/courses/{}/timetable/timeline", course_id)).await
     }
 
     // ---------- /ips ----------
