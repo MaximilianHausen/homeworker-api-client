@@ -10,7 +10,7 @@ pub struct TimetableDay {
     pub is_today: bool,
     pub is_unschooled: bool,
     pub lessons: Vec<Entry>,
-    pub representations: Vec<Representation>,
+    pub representations: Vec<()>, //TODO: Find representation type
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -26,8 +26,8 @@ pub struct Unit {
     //TODO: Check unit id type (propably u32)
     pub start: String,
     pub end: String,
-    pub position: Option<String>,
-    //TODO: Find unit position type (placeholder String)
+    pub position: Option<()>,
+    //TODO: Find unit position type
     pub positions: Vec<u8>,
     pub text: String,
     pub text_readable: String,
