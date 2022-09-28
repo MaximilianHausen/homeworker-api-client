@@ -29,6 +29,48 @@ impl From<types::Error> for Error {
     }
 }
 
+pub mod auth {
+    use reqwest::Client;
+    use serde::{Deserialize, Serialize};
+    use crate::BASE_URL;
+
+
+    #[derive(Deserialize)]
+    pub struct TokenResponse {
+        pub access_token: String,
+        pub expires_in: u32,
+        pub scope: String,
+        pub token_type: String,
+        pub refresh_token: String,
+    }
+
+    pub async fn exchange_token(client_id: String, client_secret: String, code: String) -> crate::Result<TokenResponse> {
+        #[derive(Serialize)]
+        struct CodeExchangeQuery {
+            client_id: String,
+            client_secret: String,
+            code: String,
+            grant_type: String,
+        }
+
+        let response = Client::new().get(format!("{}/oauth2/token", BASE_URL.to_owned()))
+            .query(&CodeExchangeQuery {
+                client_id,
+                client_secret,
+                code,
+                grant_type: "authorization_code".to_owned(),
+            })
+            .send()
+            .await?;
+
+        if response.status().is_success() {
+            Ok(response.json::<TokenResponse>().await?)
+        } else {
+            Err(response.json::<crate::types::Error>().await?.into())
+        }
+    }
+}
+
 pub struct HomeworkerClient {
     client: Client,
     pub access_token: String,
