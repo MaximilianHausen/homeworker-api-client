@@ -18,7 +18,7 @@ pub struct ErrorResponse {
 pub struct Error {
     pub name: String,
     pub message: String,
-    pub code: i32,
+    pub code: u16,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
