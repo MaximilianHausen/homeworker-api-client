@@ -1,5 +1,5 @@
 [package]
-name = "homeworker-api-client"
+name = "homeworker"
 version = "0.1.0"
 edition = "2021"
 
