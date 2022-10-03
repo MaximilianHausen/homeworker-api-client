@@ -8,8 +8,6 @@ use crate::types::users::*;
 
 pub mod types;
 
-pub const BASE_URL: &str = "https://homeworker.li/api/v2";
-
 type Result<T> = std::result::Result<T, Error>;
 
 pub enum Error {
@@ -32,8 +30,6 @@ impl From<types::Error> for Error {
 pub mod auth {
     use reqwest::Client;
     use serde::{Deserialize, Serialize};
-    use crate::BASE_URL;
-
 
     #[derive(Deserialize)]
     pub struct TokenResponse {
@@ -53,7 +49,7 @@ pub mod auth {
             grant_type: String,
         }
 
-        let response = Client::new().get(format!("{}/oauth2/token", BASE_URL.to_owned()))
+        let response = Client::new().get("https://homeworker.li/api/v2/oauth2/token".to_owned())
             .query(&CodeExchangeQuery {
                 client_id,
                 client_secret,
@@ -73,6 +69,7 @@ pub mod auth {
 
 pub struct HomeworkerClient {
     client: Client,
+    base_url: String,
     pub access_token: String,
 }
 
@@ -80,6 +77,15 @@ impl HomeworkerClient {
     pub fn new(access_token: String) -> Self {
         Self {
             client: Client::new(),
+            base_url: "https://homeworker.li/api/v2".to_owned(),
+            access_token,
+        }
+    }
+
+    pub fn with_custom_url(access_token: String, base_url: String) -> Self {
+        Self {
+            client: Client::new(),
+            base_url,
             access_token,
         }
     }
@@ -87,15 +93,14 @@ impl HomeworkerClient {
     // ========== GENERAL FETCH ==========
 
     async fn get<T: DeserializeOwned>(&self, endpoint: &str) -> Result<T> {
-        self.fetch(self.client.get(BASE_URL.to_owned() + endpoint)).await
+        self.fetch(self.client.get(self.base_url.clone() + endpoint)).await
     }
     async fn post<T: Serialize, Q: DeserializeOwned>(&self, endpoint: &str, body: &T) -> Result<Q> {
-        self.fetch(self.client.post(BASE_URL.to_owned() + endpoint).json(&body)).await
+        self.fetch(self.client.post(self.base_url.clone() + endpoint).json(&body)).await
     }
     async fn delete<T: DeserializeOwned>(&self, endpoint: &str) -> Result<T> {
-        self.fetch(self.client.delete(BASE_URL.to_owned() + endpoint)).await
+        self.fetch(self.client.delete(self.base_url.clone() + endpoint)).await
     }
-
 
     async fn fetch<T: DeserializeOwned>(&self, request: RequestBuilder) -> Result<T> {
         let response = request
