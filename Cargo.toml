@@ -3,11 +3,9 @@ name = "homeworker"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
-serde = { version = "1.0.139", features = ["derive"] }
+serde = { version = "1.0.145", features = ["derive"] }
 chrono = { version = "0.4.22", features = ["serde"] }
-url = { version = "2.2.2", features = ["serde"] }
+url = { version = "2.3.1", features = ["serde"] }
 
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11.12", features = ["json"] }
