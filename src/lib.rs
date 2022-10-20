@@ -71,22 +71,25 @@ pub struct HomeworkerClient {
     client: Client,
     base_url: String,
     pub access_token: String,
+    pub client_header: String,
 }
 
 impl HomeworkerClient {
-    pub fn new(access_token: String) -> Self {
+    pub fn new(access_token: String, client_header: String) -> Self {
         Self {
             client: Client::new(),
             base_url: "https://homeworker.li/api/v2".to_owned(),
             access_token,
+            client_header
         }
     }
 
-    pub fn with_custom_url(access_token: String, base_url: String) -> Self {
+    pub fn with_custom_url(access_token: String, client_header: String, base_url: String) -> Self {
         Self {
             client: Client::new(),
             base_url,
             access_token,
+            client_header
         }
     }
 
@@ -105,6 +108,7 @@ impl HomeworkerClient {
     async fn fetch<T: DeserializeOwned>(&self, request: RequestBuilder) -> Result<T> {
         let response = request
             .header("Authorization", format!("Bearer {}", self.access_token))
+            .header("X-Client", &self.client_header)
             .send()
             .await?;
 
