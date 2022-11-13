@@ -3,9 +3,12 @@ name = "homeworker"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
-serde = { version = "1.0.145", features = ["derive"] }
-chrono = { version = "0.4.22", features = ["serde"] }
+serde = { version = "1.0.147", features = ["derive"] }
+chrono = { version = "0.4.23", features = ["serde"] }
 url = { version = "2.3.1", features = ["serde"] }
 
 reqwest = { version = "0.11.12", features = ["json"] }
