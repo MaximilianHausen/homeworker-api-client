@@ -10,6 +10,7 @@ pub mod types;
 
 type Result<T> = std::result::Result<T, Error>;
 
+#[derive(Debug)]
 pub enum Error {
     RequestError(reqwest::Error),
     ApiError(types::Error),

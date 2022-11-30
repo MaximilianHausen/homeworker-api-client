@@ -14,7 +14,7 @@ pub struct ErrorResponse {
     pub error: Error,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Error {
     pub name: String,
     pub message: String,
