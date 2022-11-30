@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use chrono::{NaiveDate, NaiveDateTime, NaiveTime};
 use serde::{Deserialize, Serialize};
+use time::{Date, PrimitiveDateTime, Time};
 use url::Url;
 
 //TODO: Redo courses/lessons from API responses

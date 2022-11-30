@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use time::PrimitiveDateTime;
 use url::Url;
 
 use super::users::Presence;

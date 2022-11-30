@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
+use time::{Date, PrimitiveDateTime};
 
 // Status: Checked but unfinished
 
@@ -10,8 +10,7 @@ pub struct User {
     pub id: u32,
     pub name: String,
     pub name_is_editable: bool,
-    pub badges: HashMap<String, String>,
-    //TODO: Empty array if no entries?
+    pub badges: HashMap<String, String>, //TODO: Empty array if no entries?
     pub is_pro: bool,
     pub is_student: bool,
     pub is_teacher: bool,
@@ -21,18 +20,18 @@ pub struct User {
     pub mobile: Option<String>,
     pub mobile_verified: bool,
     pub mobile_is_editable: bool,
-    pub birthday: NaiveDate,
+    pub birthday: Date,
     pub birthday_is_editable: bool,
-    pub registered_at: NaiveDateTime,
-    pub last_seen_at: NaiveDateTime,
+    pub registered_at: PrimitiveDateTime,
+    pub last_seen_at: PrimitiveDateTime,
     pub avatar_url: url::Url,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct AccessTokenInfo {
     pub token: String,
-    pub created_at: NaiveDateTime,
-    pub expires_at: NaiveDateTime,
+    pub created_at: PrimitiveDateTime,
+    pub expires_at: PrimitiveDateTime,
     pub expires_in: i32,
     #[serde(rename = "type")]
     pub token_type: String, // Enum: Bearer, MAC
@@ -86,13 +85,11 @@ pub struct Notification {
     pub title: String,
     pub subtitle: Option<String>,
     pub body: String,
-    pub document_relation: Option<String>,
-    //TODO: Check type of document_relation in Notification (probably String)
+    pub document_relation: Option<String>, //TODO: Check type of document_relation in Notification (probably String)
     pub link: url::Url,
-    pub tag: Option<()>,
-    //TODO: Find type of tag in Notification
-    pub created_at: NaiveDateTime,
-    pub seen_at: Option<NaiveDateTime>,
+    pub tag: Option<()>, //TODO: Find type of tag in Notification
+    pub created_at: PrimitiveDateTime,
+    pub seen_at: Option<PrimitiveDateTime>,
     pub title_formatted: String,
     pub title_basic: String,
     pub body_formatted: String,
@@ -104,12 +101,10 @@ pub struct Membership {
     pub course_id: u32,
     pub user_id: u32,
     pub time: i32,
-    pub changed: i32,
-    // What is this
+    pub changed: i32, // What is this
     pub is_pending: bool,
     pub is_accepted: bool,
 }
-
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct StudentInfo {

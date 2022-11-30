@@ -1,5 +1,5 @@
-use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
+use time::PrimitiveDateTime;
 
 use super::lessons;
 

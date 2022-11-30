@@ -1,12 +1,12 @@
-use std::collections::HashMap;
-use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use time::Date;
 
 // Status: Checked but unfinished
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct TimetableDay {
-    pub date: NaiveDate,
+    pub date: Date,
     pub is_today: bool,
     pub is_unschooled: bool,
     pub lessons: Vec<Entry>,
@@ -22,12 +22,10 @@ pub struct Entry {
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Unit {
-    pub id: Option<u32>,
-    //TODO: Check unit id type (propably u32)
+    pub id: Option<u32>, //TODO: Check unit id type (propably u32)
     pub start: String,
     pub end: String,
-    pub position: Option<()>,
-    //TODO: Find unit position type
+    pub position: Option<u8>,
     pub positions: Vec<u8>,
     pub text: String,
     pub text_readable: String,
@@ -41,8 +39,7 @@ pub struct Lesson {
     pub room: String,
     pub teacher: String,
     pub note: String,
-    pub color: Option<String>,
-    //TODO: Check lesson color type (propably String)
+    pub color: Option<String>, //TODO: Check lesson color type (propably String)
     pub import_source: String,
     pub is_gradable: bool,
     pub is_timetable_only: bool,

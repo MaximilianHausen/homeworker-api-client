@@ -7,8 +7,7 @@ pub struct School {
     pub id: u32,
     pub name: String,
     pub address: Option<String>,
-    pub lat: f32,
-    //TODO: lat/lon in School "0" default value
+    pub lat: f32, //TODO: lat/lon in School "0" default value
     pub lon: f32,
     pub website: Option<String>,
     pub logo: Option<String>,
@@ -17,8 +16,7 @@ pub struct School {
     pub director: Option<String>,
     pub region: String,
     pub city: String,
-    pub bigbluebutton_participants: Option<String>,
-    //TODO: Deserialite bigbluebutton_participants as number
+    pub bigbluebutton_participants: Option<String>, //TODO: Deserialite bigbluebutton_participants as number
     pub loan: Option<f32>,
     pub verified_by: Option<u32>,
 }
