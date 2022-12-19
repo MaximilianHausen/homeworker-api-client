@@ -51,7 +51,7 @@ pub mod auth {
         }
 
         let response = Client::new().get("https://homeworker.li/api/v2/oauth2/token".to_owned())
-            .query(&CodeExchangeQuery {
+            .json(&CodeExchangeQuery {
                 client_id,
                 client_secret,
                 code,
