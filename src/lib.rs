@@ -10,7 +10,6 @@ pub mod types;
 
 type Result<T> = std::result::Result<T, Error>;
 
-#[derive(Debug)]
 pub enum Error {
     RequestError(reqwest::Error),
     ApiError(types::Error),
@@ -50,7 +49,8 @@ pub mod auth {
             grant_type: String,
         }
 
-        let response = Client::new().get("https://homeworker.li/api/v2/oauth2/token".to_owned())
+        let response = Client::new().post("https://homeworker.li/api/v2/oauth2/token".to_owned())
+            .header("User-Agent", "homeworker-rs/0.1.0")
             .json(&CodeExchangeQuery {
                 client_id,
                 client_secret,
@@ -63,7 +63,7 @@ pub mod auth {
         if response.status().is_success() {
             Ok(response.json::<TokenResponse>().await?)
         } else {
-            Err(response.json::<crate::types::Error>().await?.into())
+            Err(response.json::<crate::types::ErrorResponse>().await?.error.into())
         }
     }
 }
@@ -116,7 +116,7 @@ impl HomeworkerClient {
         if response.status().is_success() {
             Ok(response.json::<T>().await?)
         } else {
-            Err(response.json::<types::Error>().await?.into())
+            Err(response.json::<types::ErrorResponse>().await?.error.into())
         }
     }
 
