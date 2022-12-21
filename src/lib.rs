@@ -83,7 +83,7 @@ pub mod auth {
                 client_id,
                 client_secret,
                 refresh_token,
-                grant_type: "authorization_code".to_owned(),
+                grant_type: "refresh_token".to_owned(),
             })
             .send()
             .await?;
