@@ -31,7 +31,7 @@ pub mod auth {
     use reqwest::Client;
     use serde::{Deserialize, Serialize};
 
-    #[derive(Deserialize)]
+    #[derive(Deserialize, Clone, Debug)]
     pub struct TokenResponse {
         pub access_token: String,
         pub expires_in: u32,
@@ -55,6 +55,33 @@ pub mod auth {
                 client_id,
                 client_secret,
                 code,
+                grant_type: "authorization_code".to_owned(),
+            })
+            .send()
+            .await?;
+
+        if response.status().is_success() {
+            Ok(response.json::<TokenResponse>().await?)
+        } else {
+            Err(response.json::<crate::types::ErrorResponse>().await?.error.into())
+        }
+    }
+
+    pub async fn refresh_token(client_id: String, client_secret: String, refresh_token: String) -> crate::Result<TokenResponse> {
+        #[derive(Serialize)]
+        struct TokenRefreshQuery {
+            client_id: String,
+            client_secret: String,
+            refresh_token: String,
+            grant_type: String,
+        }
+
+        let response = Client::new().post("https://homeworker.li/api/v2/oauth2/token".to_owned())
+            .header("User-Agent", "homeworker-rs/0.1.0")
+            .json(&TokenRefreshQuery {
+                client_id,
+                client_secret,
+                refresh_token,
                 grant_type: "authorization_code".to_owned(),
             })
             .send()
