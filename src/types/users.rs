@@ -5,7 +5,7 @@ use time::{Date, PrimitiveDateTime};
 
 // Status: Checked but unfinished
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct User {
     pub id: u32,
     pub name: String,
@@ -27,7 +27,7 @@ pub struct User {
     pub avatar_url: url::Url,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct AccessTokenInfo {
     pub token: String,
     pub created_at: PrimitiveDateTime,
@@ -37,13 +37,13 @@ pub struct AccessTokenInfo {
     pub token_type: String, // Enum: Bearer, MAC
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Presence {
     pub is_online: bool,
     pub expires_in: i32,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Navigation {
     pub items: Vec<NavigationEntry>,
     pub cut_after: u16,
@@ -51,7 +51,7 @@ pub struct Navigation {
     pub me: NavigationUser,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NavigationEntry {
     pub icon: String,
     pub text: String,
@@ -61,25 +61,25 @@ pub struct NavigationEntry {
     pub badge_identifier: Option<String>, //TODO: Find type of badge_identifier in NavigationEntry (placeholder String)
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NavigationBranding {
     pub logo: String,
     pub name: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NavigationUser {
     pub name: String,
     pub avatar_url: url::Url,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Setting {
     pub name: String,
     pub value: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Notification {
     pub id: u32,
     pub title: String,
@@ -96,7 +96,7 @@ pub struct Notification {
     pub body_basic: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Membership {
     pub course_id: u32,
     pub user_id: u32,
@@ -106,7 +106,7 @@ pub struct Membership {
     pub is_accepted: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct StudentInfo {
     pub id: String,
     pub name: String,

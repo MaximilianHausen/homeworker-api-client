@@ -8,7 +8,7 @@ use super::users::Presence;
 
 //TODO: Redo chats from API responses
 
-/*#[derive(Serialize, Deserialize, Clone)]
+/*#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Chat {
     pub id: i32,
     pub name: String,
@@ -29,7 +29,7 @@ pub struct Chat {
     //pub can_write: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ChatMessage {
     pub id: i32,
     pub chat_id: i32,
@@ -50,7 +50,7 @@ pub struct ChatMessage {
     pub poll: Option<>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ChatUser {
     pub id: i32,
     pub name: String,
@@ -68,7 +68,7 @@ pub struct ChatCreateInfo {
 }
 
 /// Untested
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct FileAttachment {
     pub id: i32,
     pub hash: String,
@@ -90,7 +90,7 @@ pub struct FileAttachment {
 }
 
 /// Untested
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PollAttachment {
     pub id: i32,
     pub is_anonymous: bool,
@@ -103,7 +103,7 @@ pub struct PollAttachment {
 }
 
 /// Untested
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PollAttachmentOption {
     pub id: i32,
     pub text: String,
@@ -113,7 +113,7 @@ pub struct PollAttachmentOption {
 }
 
 /// Untested
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PollAttachmentVote {
     pub id: i32,
     pub name: String,

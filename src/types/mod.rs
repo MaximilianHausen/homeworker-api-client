@@ -9,7 +9,7 @@ pub mod timetables;
 pub mod todos;
 pub mod users;
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct ErrorResponse {
     pub error: Error,
 }
@@ -20,7 +20,7 @@ impl From<Error> for ErrorResponse {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Error {
     pub name: String,
     pub message: String,
@@ -33,7 +33,7 @@ impl From<ErrorResponse> for Error {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Ips {
     pub dns: Vec<IpAddr>,
     pub webhooks: Vec<IpAddr>,

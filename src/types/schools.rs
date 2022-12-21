@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 // Status: Checked but unfinished
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct School {
     pub id: u32,
     pub name: String,

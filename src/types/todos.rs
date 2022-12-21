@@ -5,7 +5,7 @@ use super::lessons;
 
 //TODO: Redo Todos from API responses
 
-/*#[derive(Serialize, Deserialize, Clone)]
+/*#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Todo {
     id: i32,
     //course_id: null,

@@ -6,7 +6,7 @@ use url::Url;
 
 //TODO: Redo courses/lessons from API responses
 
-/*#[derive(Serialize, Deserialize, Clone)]
+/*#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Course {
     id: i32,
     name: String,
@@ -17,7 +17,7 @@ pub struct Course {
     is_teacher_mode: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Lesson {
     id: i32,
     name: String,
@@ -32,7 +32,7 @@ pub struct Lesson {
     rooms: HashMap<String, String>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct FileEntry {
     id: i32,
     name: String,
@@ -43,7 +43,7 @@ pub struct FileEntry {
     can_write: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct File {
     id: i32,
     hash: String,
@@ -60,7 +60,7 @@ pub struct File {
     human_size: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Homework {
     id: i32,
     course_id: i32,
@@ -78,7 +78,7 @@ pub struct Homework {
     is_submissionable: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Timetable {
     date: NaiveDate,
     is_today: bool,
@@ -87,14 +87,14 @@ pub struct Timetable {
     //representations: []
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TimetableLesson {
     unit: TimetableTime,
     lessons: Option<Vec<Lesson>>,
     is_break: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TimetableTime {
     //id: null,
     start: Time,

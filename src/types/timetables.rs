@@ -4,7 +4,7 @@ use time::Date;
 
 // Status: Checked but unfinished
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct TimetableDay {
     pub date: Date,
     pub is_today: bool,
@@ -13,14 +13,14 @@ pub struct TimetableDay {
     pub representations: Vec<()>, //TODO: Find representation type
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Entry {
     pub unit: Unit,
     pub lessons: Option<Vec<Lesson>>,
     pub is_break: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Unit {
     pub id: Option<u32>, //TODO: Check unit id type (propably u32)
     pub start: String,
@@ -31,7 +31,7 @@ pub struct Unit {
     pub text_readable: String,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Lesson {
     pub id: u32,
     pub name: String,
