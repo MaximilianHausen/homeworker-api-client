@@ -16,7 +16,7 @@ pub struct TimetableDay {
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Entry {
     pub unit: Unit,
-    pub lessons: Vec<Lesson>,
+    pub lessons: Option<Vec<Lesson>>,
     pub is_break: bool,
 }
 
