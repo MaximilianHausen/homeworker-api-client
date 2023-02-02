@@ -10,6 +10,8 @@ pub mod types;
 
 type Result<T> = std::result::Result<T, Error>;
 
+const LIB_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 #[derive(Debug)]
 pub enum Error {
     RequestError(reqwest::Error),
@@ -138,6 +140,7 @@ impl HomeworkerClient {
         let response = request
             .header("Authorization", format!("Bearer {}", self.access_token))
             .header("X-Client", &self.client_header)
+            .header("User-Agent", format!("homerorker-rs/{}", LIB_VERSION))
             .send()
             .await?;
 
