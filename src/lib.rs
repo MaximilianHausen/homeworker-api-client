@@ -53,7 +53,7 @@ pub mod auth {
         }
 
         let response = Client::new().post("https://homeworker.li/api/v2/oauth2/token".to_owned())
-            .header("User-Agent", "homeworker-rs/0.1.0")
+            .header("User-Agent", format!("homeworker-rs/{}", crate::LIB_VERSION))
             .json(&CodeExchangeQuery {
                 client_id,
                 client_secret,
@@ -80,7 +80,7 @@ pub mod auth {
         }
 
         let response = Client::new().post("https://homeworker.li/api/v2/oauth2/token".to_owned())
-            .header("User-Agent", "homeworker-rs/0.1.0")
+            .header("User-Agent", format!("homeworker-rs/{}", crate::LIB_VERSION))
             .json(&TokenRefreshQuery {
                 client_id,
                 client_secret,
@@ -140,7 +140,7 @@ impl HomeworkerClient {
         let response = request
             .header("Authorization", format!("Bearer {}", self.access_token))
             .header("X-Client", &self.client_header)
-            .header("User-Agent", format!("homerorker-rs/{}", LIB_VERSION))
+            .header("User-Agent", format!("homeworker-rs/{}", LIB_VERSION))
             .send()
             .await?;
 
